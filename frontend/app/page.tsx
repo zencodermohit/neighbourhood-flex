@@ -1,5 +1,5 @@
-import { DashboardClient } from "@/components/dashboard-client";
+import { FlexDashboard } from "@/components/flex/flex-dashboard";
 
 export default function Home() {
-  return <DashboardClient />;
+  return <FlexDashboard />;
 }

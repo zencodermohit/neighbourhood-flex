@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Request
@@ -6,17 +7,20 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from routers import market, users, websockets
-from routers.websockets import orchestrator
+from routers import api
+from runtime import runtime
+
+logging.basicConfig(level=logging.INFO)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    asyncio.create_task(orchestrator.start_simulation_loop())
+    task = asyncio.create_task(runtime.run())
     yield
+    task.cancel()
 
 
-app = FastAPI(title="VoltNet Microgrid Core Engine", lifespan=lifespan)
+app = FastAPI(title="Neighbourhood Flex", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,14 +30,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(users.router)
-app.include_router(market.router)
-app.include_router(websockets.router)
+app.include_router(api.router)
+app.include_router(api.stream_router)
 
 
 @app.get("/")
 def read_root():
-    return {"status": "VoltNet Engine Operational"}
+    return {"status": "Neighbourhood Flex engine operational"}
 
 
 @app.exception_handler(HTTPException)

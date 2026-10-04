@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VoltNet",
-  description: "P2P energy auction simulation dashboard",
+  title: "Neighbourhood Flex",
+  description: "Transformer-level flexibility coordination dashboard",
 };
 
 export default function RootLayout({

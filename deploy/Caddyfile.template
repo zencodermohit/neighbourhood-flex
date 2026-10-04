@@ -1,0 +1,18 @@
+# Rendered by deploy/release.sh: __SITE__ is replaced with the public hostname.
+__SITE__ {
+	encode zstd gzip
+
+	# The 3D model check is a Next.js route; every other /api and /ws path is the engine.
+	handle /api/twin-model {
+		reverse_proxy frontend:3000
+	}
+	handle /api/* {
+		reverse_proxy backend:8000
+	}
+	handle /ws/* {
+		reverse_proxy backend:8000
+	}
+	handle {
+		reverse_proxy frontend:3000
+	}
+}

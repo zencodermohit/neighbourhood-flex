@@ -1,0 +1,26 @@
+services:
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    environment:
+      FLEX_SECONDS_PER_INTERVAL: "2"
+
+  frontend:
+    build: ../frontend
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [backend, frontend]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
